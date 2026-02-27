@@ -1,0 +1,23 @@
+{
+    "aime24": {
+        "n": 4,
+        "temperature": 0.7
+    },
+    "amc23": {
+        "n": 4,
+        "temperature": 0.7
+    },
+    "math500": {
+        "n": 1,
+        "temperature": 0.0
+    },
+    "dsr_sub": {
+        "n": 8,
+        "temperature": 0.7
+    },
+    "eval_connect4": {
+        "n": 1,
+        "temperature": 0.7
+    }
+
+}

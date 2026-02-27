@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🍷</text></svg>">
+
+  <title>Sober Reasoning</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');</style>
+
+  <script>
+    window.tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            burgundy: {
+              50: '#FBF0F4',
+              100: '#F7E8ED',
+              200: '#EFCFD9',
+              300: '#E6B1C0',
+              400: '#D27A96',
+              500: '#B45474',
+              600: '#7D2E46',
+              700: '#5F2335',
+              800: '#421924',
+              900: '#210D12',
+            },
+            navy: {
+              50: '#EEF2F7',
+              100: '#D9E2ED',
+              200: '#B0C5DB',
+              300: '#84A5C9',
+              400: '#5B85B6',
+              500: '#3C5F91',
+              600: '#1A365D',
+              700: '#122545',
+              800: '#0B172D',
+              900: '#050B16',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      font-size: 1rem;
+      color: #334155;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      background-color: #FFFFFF;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #1E293B;
+    }
+
+    .model-name {
+      font-weight: 600;
+    }
+
+    table.dataTable {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    table.dataTable thead th {
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 12px 8px;
+      background-color: #F1F5F9;
+      color: #1E293B;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    table.dataTable td {
+      font-size: 0.95rem;
+      padding: 10px 8px;
+      vertical-align: middle;
+    }
+
+    table.dataTable.stripe tbody tr.odd {
+      background-color: #F8FAFC;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #FBF0F4 !important;
+    }
+
+    .group-header {
+      font-size: 0.95rem;
+      padding: 8px 12px;
+      font-weight: 600;
+      background-color: #F7E8ED !important;
+      color: #7D2E46;
+    }
+
+    .best-score {
+      font-weight: 800;
+      color: #065F46;
+      background: linear-gradient(transparent 60%, #D1FAE5 60%);
+      text-shadow: 0 0 2px rgba(16, 185, 129, 0.5);
+    }
+
+    .highlight-row {
+      background-color: #FEF9C3 !important;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+      margin: 0;
+      float: none;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+      font-size: 0.875rem;
+      border-color: #D1D5DB;
+      border-radius: 0.375rem;
+    }
+
+    .paper-btn {
+      background-color: #F7E8ED;
+      color: #7D2E46;
+      border-color: #D27A96;
+    }
+
+    .paper-btn:hover {
+      background-color: #EFCFD9;
+    }
+
+    .github-btn {
+      background-color: #EEF2F7;
+      color: #1A365D;
+      border-color: #5B85B6;
+    }
+
+    .github-btn:hover {
+      background-color: #D9E2ED;
+    }
+
+    .highlight-btn {
+      background-color: #ECFDF5;
+      color: #14532D;
+      border-color: #34D399;
+    }
+
+    .highlight-btn:hover {
+      background-color: #D1FAE5;
+    }
+
+    .reset-btn {
+      background-color: #FEF9C3;
+      color: #92400E;
+      border-color: #FCD34D;
+    }
+
+    .reset-btn:hover {
+      background-color: #FEF3C7;
+    }
+
+    .base-model-row {
+      background-color: #FBF0F4 !important; /* Burgundy 50 */
+      font-weight: 400; /* Normal font weight */
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-700 p-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-6">
+      <h1 class="text-5xl font-bold mb-3 tracking-tight text-slate-900"> Sober Reasoning Leaderboard 🍷</h1>
+      <div class="text-base text-slate-700 mb-3">
+        <p>
+          <a href="https://x.com/ahochlehnert" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Andreas Hochlehnert*</a><sup>1</sup>,
+          <a href="https://x.com/hrdkbhatnagar" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Hardik Bhatnagar*</a><sup>1</sup>,
+          <a href="https://vishaal27.github.io/" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Vishaal Udandarao</a><sup>1,2</sup>,
+          <a href="https://samuelalbanie.com/" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Samuel Albanie</a>,
+          <a href="https://drimpossible.github.io/" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Ameya Prabhu</a><sup>1</sup>,
+          <a href="https://scholar.google.de/citations?user=0z0fNxUAAAAJ&hl=en" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">Matthias Bethge</a><sup>1</sup>
+        </p>
+        <p class="text-sm text-slate-500">
+          <sup>1</sup>Tübingen AI Center - University of Tübingen &nbsp;&nbsp; <sup>2</sup>University of Cambridge
+        </p>
+      </div>
+
+      <p class="text-base text-slate-600 max-w-2xl mx-auto mb-4">
+        Evaluation reports Pass@1 accuracy (mean ± std) across six math benchmarks using standardized evaluation. The scores are across 10 seeds for AIME24, AIME25, and AMC23; and across 3 seeds for MATH500, Minerva and OlympiadBench.
+      </p>
+      <div class="flex justify-center gap-4 mb-6 flex-wrap">
+        <a href="https://arxiv.org/pdf/2504.07086" target="_blank"
+           class="github-btn px-4 py-2 flex items-center gap-2 text-base rounded-lg hover:bg-navy-100 transition border shadow-sm">
+          <i class="fas fa-file-alt"></i>
+          Paper
+        </a>
+        <a href="https://github.com/bethgelab/sober-reasoning" target="_blank"
+           class="github-btn px-4 py-2 flex items-center gap-2 text-base rounded-lg hover:bg-navy-100 transition border shadow-sm">
+          <i class="fab fa-github"></i>
+          Code
+        </a>
+      </div>
+    </div>
+
+    <div id="controlsBar" class="flex flex-wrap items-end justify-between gap-4 mb-6">
+      <div class="flex items-end gap-4">
+        <div class="flex flex-col">
+          <label for="groupFilter" class="text-sm font-medium text-slate-700 mb-1">Filter by Base Model:</label>
+          <select id="groupFilter" class="border border-gray-300 rounded px-3 py-2 w-64 focus:ring-burgundy-500 focus:border-burgundy-500">
+            <option value="">All model groups</option>
+          </select>
+        </div>
+        <!-- Technique filter buttons will be added here by JavaScript -->
+        <div id="techniqueFilterContainer" class="flex items-center gap-2"></div>
+      </div>
+
+      <div class="flex items-end gap-4 ml-auto">
+        <div id="customSearchContainer"></div>
+        <button
+          id="toggleHighlight"
+          class="px-3 py-2 min-w-[10rem] text-center justify-center rounded text-sm border shadow-sm flex items-center gap-2 bg-emerald-50 text-emerald-800 border-emerald-400 transition-all"
+        >
+          <i class="fas fa-broom"></i>
+          Clear Highlights
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto shadow-md rounded-lg">
+      <table id="modelTable" class="display stripe w-full text-sm">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Organization</th>
+            <th>Base Model</th>
+            <th>Method</th>
+            <th>Link</th>
+            <th>AIME'24</th>
+            <th>AIME'25</th>
+            <th>AMC'23</th>
+            <th>MATH500</th>
+            <th>Minerva</th>
+            <th>OlympiadBench</th>
+            <th>Avg</th>
+          </tr>
+        </thead>
+        <tbody id="modelBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    $.getJSON("data.json", function(modelData) {
+      const tbody = $("#modelBody");
+      const groups = new Set();
+
+      modelData.forEach(model => {
+        groups.add(model.baseModel);
+
+        const scores = [
+          model.aime24 || "-",
+          model.aime25 || "-",
+          model.amc23 || "-",
+          model.math500 || "-",
+          model.minerva || "-",
+          model.olympiad || "-"
+        ];
+
+        const validScores = scores
+          .map(s => parseFloat((s || "0").split("±")[0]))
+          .filter(n => !isNaN(n));
+
+        const avg = validScores.reduce((a, b) => a + b, 0) / validScores.length;
+
+        const row = $("<tr>")
+          .addClass("group-row")
+          .attr("data-group", model.baseModel);
+
+        // Normalize strings for comparison (remove non-alphanumeric and convert to lowercase)
+        const normalizeString = (str) => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+        // Store the original base model for filtering
+        const originalBaseModel = model.baseModel;
+
+        if (normalizeString(model.name) === normalizeString(model.baseModel)) {
+          row.addClass("base-model-row");
+          model.technique = "-"; // Set technique to '-' for base models
+          model.baseModel = "-"; // Set baseModel to '-' for base models
+        }
+
+        // Add original base model data to the row for custom filtering
+        row.data('originalBaseModel', originalBaseModel);
+
+        row.append(`<td class="model-name">${model.name}</td>`);
+        row.append(`<td>${model.organization}</td>`);
+        row.append(`<td>${model.baseModel}</td>`);
+        row.append(`<td>${model.technique || "-"}</td>`);
+        if (model.paperLink && model.paperText) {
+          row.append(`<td><a href="${model.paperLink}" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">${model.paperText}</a></td>`);
+        } else if (model.paperLink) {
+          row.append(`<td><a href="${model.paperLink}" target="_blank" class="text-burgundy-600 hover:text-burgundy-800 underline">arXiv</a></td>`);
+        } else {
+          row.append(`<td>-</td>`);
+        }
+
+        row.append(`<td>${model.aime24 || "-"}</td>`);
+        row.append(`<td>${model.aime25 || "-"}</td>`);
+        row.append(`<td>${model.amc23 || "-"}</td>`);
+        row.append(`<td>${model.math500 || "-"}</td>`);
+        row.append(`<td>${model.minerva || "-"}</td>`);
+        row.append(`<td>${model.olympiad || "-"}</td>`);
+        row.append(`<td>${avg.toFixed(1)}</td>`);
+        tbody.append(row);
+      });
+
+      groups.forEach(group => {
+        $("#groupFilter").append(`<option value="${group}">${group}</option>`);
+      });
+
+      initTable();
+    });
+
+    function highlightBestScores(table) {
+      $('.best-score').removeClass('best-score');
+      for (let col = 5; col <= 10; col++) {
+        let bestScore = -1;
+        let bestIdx = -1;
+        table.rows({ search: 'applied' }).every(function (idx) {
+          const score = parseFloat(this.data()[col].split('±')[0]);
+          if (!isNaN(score) && score > bestScore) {
+            bestScore = score;
+            bestIdx = idx;
+          }
+        });
+        if (bestIdx >= 0) {
+          const cell = $(table.cell(bestIdx, col).node());
+          const content = cell.text().trim();
+          cell.html(`<span class="best-score">${content}</span>`);
+        }
+      }
+    }
+
+    function initTable() {
+      const table = $('#modelTable').DataTable({
+        columnDefs: [
+          {
+            targets: [5, 6, 7, 8, 9, 10, 11],
+            render: function (data, type) {
+              if (type === 'sort' || type === 'type') {
+                return parseFloat(data.split('±')[0]);
+              }
+              return data;
+            }
+          },
+          {
+            targets: 2,
+            width: '25%'
+          },
+          {
+            targets: 3,
+            width: '5%'
+          },
+          {
+            targets: 0,
+            width: '20%'
+          }
+        ],
+        order: [[11, 'desc']],
+        rowGroup: {
+          dataSrc: 2,
+          startRender: function (rows, group) {
+            return $('<tr class="group-header"/>')
+              .append(`<td colspan="11">Base Model: ${group}</td>`);
+          }
+        },
+        paging: false,
+        info: true,
+        ordering: true,
+        searching: true
+      });
+
+      highlightBestScores(table);
+
+      // Re-highlight best scores on table redraw (filter, sort, etc.)
+      table.on('draw', function() {
+        if (highlightsOn) { // Only re-highlight if highlights are currently enabled
+          highlightBestScores(table);
+        }
+      });
+
+    let highlightsOn = true;
+
+    $('#toggleHighlight').on('click', function () {
+      const icon = $(this).find('i');
+
+      if (highlightsOn) {
+        // Remove highlights
+        $('.best-score').each(function () {
+          const text = $(this).text();
+          $(this).parent().html(text);
+        });
+        $('.highlight-row').removeClass('highlight-row');
+
+        $(this).contents().filter(function () { return this.nodeType === 3; }).remove();
+        $(this).append('Highlight Best');
+        icon.removeClass('fa-broom').addClass('fa-star');
+
+        $(this)
+          .removeClass('bg-emerald-50 text-emerald-800 border-emerald-400')
+          .addClass('bg-yellow-50 text-yellow-800 border-yellow-400');
+      } else {
+        // Reapply highlights
+        highlightBestScores(table);
+
+        $(this).contents().filter(function () { return this.nodeType === 3; }).remove();
+        $(this).append('Clear Highlights');
+        icon.removeClass('fa-star').addClass('fa-broom');
+
+        $(this)
+          .removeClass('bg-yellow-50 text-yellow-800 border-yellow-400')
+          .addClass('bg-emerald-50 text-emerald-800 border-emerald-400');
+      }
+
+      highlightsOn = !highlightsOn;
+    });
+
+
+      $('#customSearchContainer').append($('#modelTable_filter'));
+      $('#modelTable_filter label').addClass('flex items-center gap-2');
+      $('#modelTable_filter input').addClass('px-3 py-2 border border-gray-300 rounded bg-white text-sm shadow-sm w-64 focus:ring-burgundy-500 focus:border-burgundy-500');
+
+      let currentGroupFilter = ''; // Variable to store the current group filter
+
+      // Add a custom DataTables filter for Model Group
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex, rowData) {
+          const originalBaseModel = $(settings.aoData[dataIndex].nTr).data('originalBaseModel');
+
+          // If no group filter is selected, show all rows
+          if (currentGroupFilter === '') {
+            return true;
+          }
+
+          // Show rows whose original base model matches the filter
+          return originalBaseModel === currentGroupFilter;
+        }
+      );
+
+      $('#groupFilter').on('change', function () {
+        const val = $(this).val();
+        currentGroupFilter = val; // Update the group filter variable
+        table.draw(); // Redraw the table to apply the custom group filter
+      });
+
+      $('#modelTable tbody').on('click', 'tr.group-row', function () {
+        $(this).toggleClass('highlight-row');
+      });
+
+      // Add buttons for Technique filtering
+      const techniqueButtonsHtml = `
+        <div class="flex flex-col gap-1 ml-4">
+          <span class="text-sm font-medium text-slate-700 mb-1">Filter by Technique:</span>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-2 rounded text-sm border shadow-sm transition-all technique-filter-btn" data-technique="">All</button>
+            <button class="px-3 py-2 rounded text-sm border shadow-sm transition-all technique-filter-btn" data-technique="SFT">SFT</button>
+            <button class="px-3 py-2 rounded text-sm border shadow-sm transition-all technique-filter-btn" data-technique="RL">RL</button>
+          </div>
+        </div>
+      `;
+      $('#techniqueFilterContainer').append(techniqueButtonsHtml);
+
+      // Initialize button style for 'All' as active
+      $('.technique-filter-btn[data-technique=""]').removeClass('bg-white text-burgundy-600 border-burgundy-600').addClass('bg-burgundy-600 text-white');
+
+      let currentTechniqueFilter = ''; // Variable to store the current technique filter
+
+      // Normalize strings for comparison (remove non-alphanumeric and convert to lowercase)
+      const normalizeString = (str) => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+      // Add a custom DataTables filter
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+          const modelName = data[0]; // Assuming model name is in the first column
+          const baseModel = data[2]; // Assuming base model is in the third column
+          const technique = data[3]; // Assuming technique is in the fourth column
+
+          const isBaseModel = normalizeString(modelName) === normalizeString(baseModel);
+
+          // If no filter is selected, show all rows
+          if (currentTechniqueFilter === '') {
+            return true;
+          }
+
+          // If a filter is selected, show base models and rows matching the filter
+          if (isBaseModel) {
+            return true;
+          }
+
+          return technique === currentTechniqueFilter;
+        }
+      );
+
+      // Add click handlers for the technique filter buttons
+      $('.technique-filter-btn').on('click', function () {
+        const technique = $(this).data('technique');
+        currentTechniqueFilter = technique; // Update the filter variable
+        table.draw(); // Redraw the table to apply the custom filter
+        // Update button styles to indicate active filter
+        $('.technique-filter-btn').removeClass('bg-burgundy-600 text-white').addClass('bg-white text-burgundy-600 border-burgundy-600');
+        $(this).removeClass('bg-white text-burgundy-600 border-burgundy-600').addClass('bg-burgundy-600 text-white');
+      });
+    }
+  </script>
+</body>
+</html>
