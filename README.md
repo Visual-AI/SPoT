@@ -4,8 +4,6 @@ Code for the paper **"Surgical Post-Training: Cutting Errors, Keeping Knowledge"
 
 > SPoT successfully introduces new knowledge via an Oracle to boost LLM reasoning, while preventing catastrophic forgetting through a reward-based binary optimization objective. This work makes a deep investigation into the limitations of SFT and DPO.
 
----
-
 
 
 ## Data Pipeline
@@ -76,6 +74,4 @@ bash run_evaluation_multi_trial_duplicated_data.sh /path/to/model --disable-thin
 ```
 
 Results are saved to `evaluation_results/aggregated_results.json`.
-
----
 

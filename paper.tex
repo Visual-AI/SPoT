@@ -1,0 +1,717 @@
+%%%%%%%% ICML 2026 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{multirow}
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{xspace}
+
+% \newcommand{\methodName}{\textls[80]{\textsc{spt}}\xspace}
+% \newcommand{\methodName}{{\textsc{SP}o\textsc{T}}\xspace}
+\newcommand{\methodName}{{\textsc{SPoT}}\xspace}
+% \newcommand{\methodName}{\textls[80]{SPoT}\xspace}
+
+% Macros for performance deltas
+\newcommand{\pos}[1]{\scriptsize\textcolor{green!50!black}{$\uparrow$#1}}
+\newcommand{\negat}[1]{\scriptsize\textcolor{red!70!black}{$\downarrow$#1}}
+
+\newcommand{\weak}[1]{\textcolor{gray}{#1}} % Option A: Fade them out
+% OR
+% \newcommand{\weak}[1]{\textcolor{red}{#1}}  % Option B: Highlight in red
+
+\newcommand{\kh}[1]{\textcolor{red}{[KH: #1]}} % Option A: Fade them out
+
+\newcommand{\modify}[1]{\textcolor{black}{#1}} % Option A: Fade them out
+
+%Including images in your LaTeX document requires adding
+%additional packageb
+\usepackage{graphicx}
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2026} with \usepackage[nohyperref]{icml2026} above.
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable, skins}
+\usepackage{fvextra}
+
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+% \usepackage{icml2026}
+
+% For preprint, use
+\usepackage[preprint]{icml2026}
+
+% If accepted, instead use the following line for the camera-ready submission:
+% \usepackage[accepted]{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% if you use cleveref..
+\usepackage[capitalise]{cleveref}
+
+% --- 句中引用（尽可能缩写，Table除外）---
+\crefname{section}{Section}{Sections}
+\crefname{figure}{Fig.}{Figs.}
+\crefname{equation}{Eq.}{Eqs.}
+\crefname{table}{Table}{Tables} % Table 不缩写显专业，空间极缺可改为 Tab.
+
+% --- 句首引用（必须全拼，这是语法规则）---
+\Crefname{section}{Section}{Sections}
+\Crefname{figure}{Figure}{Figures}
+\Crefname{equation}{Equation}{Equations}
+\Crefname{table}{Table}{Tables}
+
+% --- 连接符缩短 ---
+\newcommand{\crefrangeconjunction}{--}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THEOREMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+%\usepackage[disable,textsize=tiny]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Surgical Post-Training: Cutting Errors, Keeping Knowledge}
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Surgical Post-Training: Cutting Errors, Keeping Knowledge}
+
+  % It is OKAY to include author information, even for blind submissions: the
+  % style file will automatically remove it for you unless you've provided
+  % the [accepted] option to the icml2026 package.
+
+  % List of affiliations: The first argument should be a (short) identifier you
+  % will use later to specify author affiliations Academic affiliations
+  % should list Department, University, City, Region, Country Industry
+  % affiliations should list Company, City, Region, Country
+
+  % You can specify symbols, otherwise they are numbered in order. Ideally, you
+  % should not use this facility. Affiliations will be numbered in order of
+  % appearance and this is the preferred way.
+  \icmlsetsymbol{equal}{*}
+
+  \begin{icmlauthorlist}
+    \icmlauthor{Wenye Lin}{yyy} \quad \quad \quad
+    \icmlauthor{Kai Han}{yyy,equal}
+
+    %\icmlauthor{}{sch}
+
+    %\icmlauthor{}{sch}
+    %\icmlauthor{}{sch}
+  \end{icmlauthorlist}
+
+  \icmlaffiliation{yyy}{The University of Hong Kong}
+
+  % \icmlaffiliation{comp}{Company Name, Location, Country}
+  % \icmlaffiliation{sch}{School of ZZZ, Institute of WWW, Location, Country}
+
+  \icmlcorrespondingauthor{Kai Han}{kaihanx@hku.hk}
+  \icmlcorrespondingauthor{Wenye Lin}{linius@connect.hku.hk}
+
+  % You may provide any keywords that you find helpful for describing your
+  % paper; these are used to populate the "keywords" metadata in the PDF but
+  % will not be shown in the document
+  \icmlkeywords{Post Training, Catastrophic Forgetting, DPO, SFT, LLM, ICML}
+
+  \vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column listing the
+% affiliations and the copyright notice. The command takes one argument, which
+% is text to display at the start of the footnote. The \icmlEqualContribution
+% command is standard text for equal contribution. Remove it (just {}) if you
+% do not need this facility.
+
+% Use ONE of the following lines. DO NOT remove the command.
+% If you have no special notice, KEEP empty braces:
+\printAffiliationsAndNotice{$^*$Corresponding author.}  % no special notice (required even if empty)
+% Or, if applicable, use the standard equal contribution text:
+% \printAffiliationsAndNotice{\icmlEqualContribution}
+\begin{abstract}
+Enhancing the reasoning capabilities of Large Language Models (LLMs) via post-training is often constrained by the trade-off between efficiency and catastrophic forgetting. While prior research emphasizes the role of on-policy data in mitigating forgetting, we uncover—and validate both theoretically and empirically—an overlooked yet critical mechanism: the implicit regularization inherent in Direct Preference Optimization’s (DPO) reward estimate. This motivates our Surgical Post-Training (\methodName), a new paradigm designed to optimize reasoning efficiently while preserving learned prior knowledge. \methodName consists of: (1) a data rectification pipeline that employs an Oracle to surgically correct erroneous steps via minimal edits, generating data proximal to the model's distribution; and (2) a reward-based binary cross-entropy objective. Unlike the relative ranking in DPO,
+% this objective explicitly maximizes the probability of the rectifications while suppressing the errors.
+this objective treats reasoning correctness as a binary classification problem, enforcing decoupled supervision signals.
+Empirically, with only 4k rectified math data pairs, \methodName improves Qwen3-8B’s accuracy by 6.2\% on average across in-domain and OOD tasks, requiring merely 28 minutes of training on 8$\times$ H800 GPUs.
+
+
+% uncovers the specific failure modes
+% hindering this goal: the “pull-up” effect inherent to positive-only training and the inadequacy of relative ranking for verifiable truth (DPO).
+\end{abstract}
+
+\section{Introduction}
+
+
+
+% Introduce the role of post-training
+While pretraining establishes the foundation of Large Language Models (LLMs)~\cite{achiam2023gpt,comanici2025gemini,yang2025qwen3}, the post-training phase remains critical for eliciting specific competencies, such as mathematical reasoning~\cite{shao2024deepseekmath}, code generation~\cite{anthropic2024claude}, and human alignment~\cite{ouyang2022training,zhou2023instruction}. Post-training for reasoning typically follows two primary paradigms: Supervised Fine-Tuning (SFT) and Reinforcement Learning (RL). While SFT benefits from strong supervision, it is often compromised by catastrophic forgetting of the model’s prior knowledge \cite{chu2025sft,huan2025does}. Conversely, on-policy RL methods like Group Relative Policy Optimization (GRPO) \cite{shao2024deepseekmath} effectively mitigate forgetting but incur substantial computational overhead during the rollout process. More critically, standard RL is constrained by its reliance on the base model’s ability to sample correct reasoning paths, preventing it from expanding the model's fundamental reasoning boundaries \cite{yue2025does}.
+
+This trade-off raises a critical question: \textit{Can we unite the efficiency of SFT with the generalization capabilities of RL without sacrificing performance?} Addressing this challenge necessitates a deeper understanding of the mechanisms behind catastrophic forgetting. A prevailing view attributes the poor generalization of SFT to drastic distributional shift between the training data and the model's policy~\cite{chen2025retaining,shenfeld2025rl}. To bridge the gap, we introduce a data rectification pipeline designed to generate proximal-distribution data. We employ an Oracle (e.g., a stronger teacher model) to surgically correct erroneous outputs via minimal edits, yielding positive samples that remain proximal to the model's original distribution.
+
+\textbf{However, we find that data proximity is necessary but insufficient.} Empirically, SFT on this proximal data \textit{still} incurs forgetting, whereas Direct Preference Optimization (DPO)~\cite{rafailov2023direct} does not. To understand the mechanism, we employ a Reward-SFT baseline, a method integrating the DPO reward formulation into SFT. We observe that Reward-SFT effectively retains prior knowledge, confirming that \textit{the KL-constraint in the reward definition} is the decisive factor, by ``tethering'' the updated policy to the reference model. While preserving prior knowledge is essential, the model must also drive superior gains in in-domain reasoning. We identify two failure modes: (1) \textit{the ``pull-up'' effect}~\citep{renlearning} inherent in positive-only training (e.g., SFT), which inadvertently raises the likelihood of erroneous responses alongside correct ones; and (2) \textit{the inadequacy of relative ranking} in DPO for reasoning with rigid correctness.
+% Yet, proximal data alone proves insufficient. Our investigation reveals that SFT on this data \textit{still} suffers from forgetting, whereas Direct Preference Optimization (DPO)~\cite{rafailov2023direct} does not. This leads to our key finding: \textbf{DPO's KL-constraint significantly mitigates catastrophic forgetting.} The DPO reward formulation includes a $ log(\pi_\theta(y|x) / \pi_{\text{ref}}(y|x))$ term, ``tethering'' the updated policy to the reference model. Unlike SFT, which unrestrictedly maximizes likelihood, this ratio prevents the model from drifting too far from its prior distribution.
+
+% However, tethering alone is not enough. We uncover that positive-only training (even with reward tethering) suffers from a ``pull-up'' effect, where the likelihood of incorrect reasoning steps is inadvertently raised along with the correct ones. Conversely, standard DPO avoids this via negative samples but relies on relative ranking, which provides a sparse signal insufficient for verifiable mathematical truth.
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=0.98\textwidth]{icml2026/picture/illustration.pdf}
+  \caption{ \textbf{Illustration of \methodName.} Left: Our framework utilizes an Oracle to apply surgical rectifications to erroneous reasoning steps, generating positive samples that remain proximal to the model’s original distribution. Top-Right: Unlike the relative ranking used in DPO, we leverage an explicit classification loss that proves more effective for reasoning tasks. Bottom-Right: The tethering effect inherent in our reward definition effectively mitigates catastrophic forgetting.}
+  % \vspace{-5pt}
+  \label{fig:illustration}
+\end{figure*}
+
+To address these limitations, we propose Surgical Post-Training (\methodName), a paradigm designed to optimize reasoning efficiently while preserving prior knowledge. \methodName integrates our data rectification pipeline with a reward-based binary cross-entropy objective to maintain the ``tethering'' effect of the reference model. Distinct from the relative ranking in DPO, our objective explicitly maximizes the likelihood of the rectifications while suppressing errors.
+
+Our contributions are summarized as follows:
+\begin{enumerate}
+% \vspace{-5pt}
+       \item We demonstrate that beyond on-policy data, implicit regularization is another critical factor in mitigating forgetting. We show that with identical data, SFT fails to generalize, whereas DPO retains previous knowledge.
+    \item We identify the ``pull-up'' effect in positive-only training, and insufficiency of DPO for rigid reasoning tasks. We then validate a binary classification objective that provides a denser signal.
+    \item We propose \methodName, a computationally efficient paradigm that mitigates catastrophic forgetting by synergizing minimal-edit data rectification with a reward-based objective. We validate our method on Qwen3-8B and Llama-3.1-8B-Instruct, demonstrating consistent improvements and robust generalization.
+
+
+    \item To strictly evaluate out-of-domain (OOD) reasoning without data contamination, we also leverage GAMEBoT \cite{lin2025gamebot} to dynamically construct a \texttt{Connect4} dataset for reliable evaluation.
+\end{enumerate}
+
+
+
+
+
+\section{Data Rectification Pipeline}
+\label{sec:pipeline}
+Our \methodName framework consists of two core components: a \textit{data rectification pipeline} and a \textit{specialized optimization objective} (see~\cref{fig:illustration}). In this section, we detail the first component designed to produce valid reasoning paths proximal to the model's distribution.
+
+Standard SFT often utilizes offline datasets that diverge significantly from the model's current policy $\pi_\theta$, leading to catastrophic forgetting~\cite{chen2025retaining}. Conversely, on-policy methods rely entirely on the model's intrinsic probability of sampling correct reasoning paths, making them inefficient for hard reasoning tasks. For example, if a model's pass rate on a specific problem is 1\%, obtaining a single correct response requires an expected 100 rollouts, which is computationally expensive. Furthermore, for problems beyond the model's current capabilities, self-sampling fails to yield any training signal, making it impossible to learn from those instances~\cite{yu2025dapo}.
+
+
+
+To bridge this gap, we propose a \textit{data rectification pipeline} to construct a contrastive dataset $\mathcal{D} = \{(x, y^-, y^+)\}$ where the positive response $y^+$ only perform necessary correction of erroneous logic of the negative response $y^-$ while preserving the model's original generation style and lexical structure. An example is shown in \cref{fig:illustration}. The pipeline consists of the following three stages:
+
+\paragraph{Error Elicitation}
+We first construct a dataset of model failures. Given a question $x$ from the dataset, we sample a response $y^-$ from the current policy: $y^- \sim \pi_\theta(\cdot|x)$. We evaluate $y^-$ against the ground-truth answer. If the final answer is incorrect, we retain the pair $(x, y^-)$ for rectification.
+
+\paragraph{Oracle-Guided Surgical Rectification}
+We employ an Oracle to perform surgical edits, which can be either a human being or a stronger teacher model. The Oracle is provided with $y^-$ and optionally the ground truth, then instructed to only modify incorrect reasoning steps, while maintaining the original style. This results in a rectified response $y^+$ that represents the ``nearest valid neighbor'' to the error $y^-$ in the semantic space. To enhance efficiency, we adopt an \textit{offline} setting. We provide the full prompts in Appendix \ref{appd:prompt}.
+
+
+
+\paragraph{LCS Filtering}
+\label{sec:data}
+To strictly enforce the proximity of the rectified data to the student's distribution, we apply a topological constraint based on the Longest Common Subsequence (LCS) \cite{wagner1974string}. For every pair $(y^-, y^+)$, we calculate the change ratio $R_{LCS}$:
+
+\begin{equation}
+    R_{LCS}(y^-, y^+) = 1-\frac{|\text{LCS}(y^-, y^+)|}{|y^+|},
+    \label{eq:change_ratio}
+\end{equation}
+where $|\cdot|$ denotes sequence length. We filter out samples where $R_{LCS} > \gamma$. We set $\gamma=0.6$ to maximize the retention of training samples while maintaining model performance. \modify{Appendix \ref{appd:change_ratio} shows the change ratio distributions.}
+
+
+In the resulting dataset, $y^-$ and $y^+$ in each sample share the majority of their token trajectories, diverging only at decision-critical parts. This is essential for our subsequent optimization, as it allows the gradients to focus more on the divergent reasoning tokens.
+
+\section{The Reward Is Secretly a Regularizer}
+\label{sec:reward}
+Building upon the proximal dataset constructed via the pipeline in \Cref{sec:pipeline}, in this section, we demonstrate that data proximity alone is insufficient to prevent catastrophic forgetting. We analyze the learning dynamics of SFT versus reward-based methods, showing that the learning objective itself serves as an intrinsic regularizer against forgetting.
+\subsection{Empirical Observation: The Regularization Gap}
+We conduct controlled experiments using the English subset of DAPO-Math-17k \cite{yu2025dapo}. Leveraging our pipeline, we generate 4k contrastive pairs by employing Qwen3-8B as the base policy $\pi_\theta$ and Gemini 2.5 Pro as the Oracle for rectification.
+We compare the following methods trained on $\mathcal{D} = \{(x, y^-, y^+)\}$ and evaluate OOD generalization using IFEval~\citep{zhou2023instruction}:
+\paragraph{SFT+} To distinguish from standard fine-tuning on raw off-policy data, we refer to Supervised Fine-Tuning performed on the surgically rectified positive samples $y^+$ as SFT+, which minimizes the same negative log-likelihood as SFT:
+\begin{equation}
+    \mathcal{L}_{\text{SFT}} = - \mathbb{E}_{x, y^+ \sim \mathcal{D}} [\log \pi_\theta(y^+|x)]
+\end{equation}
+
+\paragraph{DPO}
+DPO optimizes a policy by leveraging a relative ranking objective derived from an implicit reward $r_\theta(x, y)$. It is defined as the log-ratio between the policy $\pi_\theta$ and the frozen reference model $\pi_{\text{ref}}$ (initialized with the same parameters as $\pi_\theta$), scaled by a coefficient $\beta$:
+\begin{equation}
+    r_\theta(x, y) = \beta \log \frac{\pi_\theta(y|x)}{\pi_{\text{ref}}(y|x)} \label{eq:reward_def}
+\end{equation}
+DPO maximizes the margin between the chosen response $y^+$ and the rejected response $y^-$:
+\begin{equation}
+\hspace{-3pt}
+    \mathcal{L}_{\text{DPO}} = - \mathbb{E}_{x, y^+, y^- \sim \mathcal{D}} [\log \sigma \! \left( r_\theta(x, y^+) \!-\! r_\theta(x, y^-) \right)] \label{eq:dpo_loss}
+\end{equation}
+
+ \paragraph{Reward-SFT} We introduce Reward-SFT as a control baseline to isolate the effect of the implicit reward from the influence of negative samples. Unlike SFT, which optimizes the likelihood of tokens directly, this objective simply maximizes the probability of the chosen response $y^+$ being classified as ``correct'' under the implicit reward formulation:
+ \begin{equation}
+    \mathcal{L}_{\text{RW-SFT}} = - \mathbb{E}_{x, y^+ \sim \mathcal{D}} [\log \sigma \! \left( r_\theta(x, y^+) \right)] \label{eq:rewardsft_loss}
+\end{equation}
+
+Functionally, this treats the optimization as a binary classification task where the model learns to classify $y^+$ as ``high reward'' relative to the reference distribution.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\linewidth]{icml2026/picture/ifeval_accuracy_comparison_oneline.pdf}
+  \caption{\textbf{IFEval Acc Results (avg@5).} SFT+ forgets instruction following ability, while reward-based methods do not. }
+  \vspace{-5pt}
+  \label{fig:ifeval}
+\end{figure}
+
+As illustrated in \Cref{fig:ifeval}, a significant divergence in generalization capability is observed. SFT+ suffers from immediate catastrophic forgetting, with IFEval performance decaying monotonically as training progresses. DPO remains stable and even gains slight improvements. Crucially, similar to SFT+, Reward-SFT does not see negative data, yet it matches the OOD stability of DPO. This finding suggests that \textit{the resistance to forgetting stems from the implicit regularization inherent in the reward formulation}.
+
+\subsection{Gradient Analysis: The Mechanics of Tethering}
+
+
+To understand why Reward-SFT prevents forgetting while standard SFT objective fails, we analyze the gradient dynamics of their respective loss functions. \textbf{We show that the distinction between these two objectives lies entirely in the dynamic scaling coefficient of the gradient.}
+
+
+The gradient for SFT with respect to the model parameters $\theta$ is:
+\begin{equation}
+\nabla_\theta \mathcal{L}_{\text{SFT}} = - \nabla_\theta \log \pi_\theta(y^+|x)
+\label{eq:sft_gradient}
+\end{equation}
+
+
+Meanwhile, the gradient for Reward-SFT in \Cref{eq:rewardsft_loss} includes a dynamic re-weighting coefficient determined by $r_\theta$ from \Cref{eq:reward_def}:
+\begin{align}
+\hspace{-6pt}
+\nabla_\theta \mathcal{L}_{\text{RW-SFT}} &= - \frac{\partial \log \sigma(r)}{\partial r} \nabla_\theta r_\theta(x, y^+) \nonumber \\
+&= - \!\left(1\!\! -\! \sigma(r_\theta(x, y^+))\right)\! \cdot \!\beta \nabla_\theta \log \pi_\theta(y^+|x)
+\label{eq:reward_sft_gradient}
+\end{align}
+Comparing \Cref{eq:sft_gradient} and \Cref{eq:reward_sft_gradient} reveals a fundamental difference in optimization pressure. In standard SFT, the gradient is scaled by a constant coefficient of $1$. Consequently, SFT applies uniform optimization pressure to all samples, regardless of the model's current competence. Even if the model has effectively assigned high probability to the training sample (e.g., $p(y^+|x) \approx 0.99$), the SFT objective continues to force parameter updates to push the probability toward $1.0$. This unbounded optimization compels the model to overwrite its pre-trained features, resulting in significant distribution shift and loss of prior capabilities.
+
+In contrast, Reward-SFT introduces an instance-dependent dynamic scaling coefficient $\lambda(x, y^+) = 1 - \sigma(r_\theta(x, y^+))$ \modify{(For simplicity, we assume $\beta = 1$ in our analysis). We term $\lambda$ the \textit{Elastic Tether}, as it modulates the ``tension'' of gradient updates.} Functioning as an adaptive regularizer based on the implicit reward value, it creates two distinct modes of training:
+
+\begin{itemize}
+    \item Acquisition Mode (Slack Tether): Initially, when the policy $\pi_\theta$ is close to the reference $\pi_{\text{ref}}$, the reward $r_\theta \approx 0$ and the scaling factor $\lambda \approx 0.5$. In this regime, the Elastic Tether is slack, allowing the model to rapidly adapt to the preferred response distribution.
+
+    \item Saturation Mode (Taut Tether): As the model aligns with the target and the implicit reward $r_\theta$ increases, the scaling coefficient vanishes due to the saturation property of the sigmoid function:
+    \begin{equation}
+        \lim_{r_\theta \to \infty} \lambda(x, y^+) = \lim_{r_\theta \to \infty} (1 - \sigma(r_\theta)) = 0 \nonumber
+    \end{equation}
+Analogous to the increasing tension of a physical tether, this mechanism restricts the policy model from deviating excessively from the reference model.
+\end{itemize}
+
+Consider a sample where the model has achieved high confidence relative to the reference, yielding a reward of $r_\theta = 10$. The sigmoid function saturates, and the gradient scaling coefficient $\lambda$ becomes:
+\begin{equation}
+    \lambda = 1 - \sigma(10) = 1 - \frac{1}{1 + e^{-10}} \approx 4.5 \times 10^{-5} \nonumber
+\end{equation}
+In comparison to standard SFT, where the coefficient is fixed at $1.0$, the Elastic Tether tightens the constraint by a factor of over ${20,000}$. This drastic reduction suppresses the gradient signal, preventing the ``over-optimization'' that causes the model to drift from its pre-trained knowledge.
+
+The Elastic Tether enables a self-regulating process that halts optimization once the policy is sufficiently distinguished from the reference distribution. \textbf{This acts as an automatic, sample-wise early stopping mechanism.} By tethering the updated policy to the reference model and suppressing updates on well-learned samples, Reward-SFT thereby preserves the pre-trained knowledge inherent in $\pi_{\text{ref}}$.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\linewidth]{icml2026/picture/training_loss_comparison.pdf}
+\caption{\textbf{Training loss curve.} Reward-SFT and DPO converge rapidly to near-zero as the policy satisfies the relative margin constraint. SFT+ remains high as it attempts to maximize absolute likelihood, driving continuous parameter updates.}
+\label{fig:loss}
+\end{figure}
+
+\begin{figure*}[htbp]
+  \centering
+
+  % 第一张图：宽度减小到 0.42 (根据需要调整)
+  \includegraphics[width=0.38\textwidth]{icml2026/picture/comparison_chosen_rewards_5_methods.pdf}
+  % 关键点：用固定的间距代替 \hfill
+  % \hspace{1cm} 表示中间只留 1 厘米的空隙，你可以改成 0.5cm 让它更紧凑
+  \hspace{2.1cm}
+  % 第二张图
+  \includegraphics[width=0.38\textwidth]{icml2026/picture/comparison_rejected_rewards_5_methods.pdf}
+
+  \caption{\textbf{Evolution of implicit rewards during training.} Left: reward scores for chosen responses; Right: reward scores for rejected responses. The reward shows how much the model's preference for the selected response has increased compared to its initial stage.}
+  \label{fig:reward}
+  % \vspace{-5pt}
+\end{figure*}
+These theoretical insights are empirically substantiated by the training loss trajectories in \cref{fig:loss} and the reward evolution in \cref{fig:reward}. As shown in \cref{fig:loss}, the Reward-SFT loss rapidly converges to zero. This behavior is a direct consequence of the definition in \cref{eq:rewardsft_loss}: as $r_\theta(x, y^+)$ increases, $\mathcal{L}_{\text{RW-SFT}}$ approaches zero. In contrast, the SFT objective drives continuous optimization, forcing superfluous parameter updates that degrade general capabilities. Furthermore, the reward trajectories in \cref{fig:reward} align perfectly with our gradient analysis. As $r_\theta$ grows, the gradient of Reward-SFT vanishes. Consequently, the reward for chosen responses under Reward-SFT plateaus, whereas the SFT counterpart continues to rise unbounded. \textbf{In contrast to recent work suggesting that KL-divergence fails to mitigate forgetting \citep{chen2025retaining,shenfeld2025rl}, these analyses corroborate the critical role of KL-constrained reward formulation in keeping knowledge during post-training.}
+
+\section{The Surgical Optimization Objective}
+While preserving prior knowledge is essential, it is insufficient; the model must also achieve substantial in-domain reasoning improvements. This section uncovers the specific failure modes hindering this goal: the ``pull-up'' effect inherent in positive-only training (e.g., SFT, Reward-SFT) and the inadequacy of relative ranking (DPO) for reasoning with verifiable truth. To bridge this gap, we introduce a reward-based binary cross-entropy objective.
+
+\subsection{The ``Pull-Up'' Effect}
+
+While Reward-SFT effectively utilizes the ``Elastic Tether'' to prevent forgetting, it inherits a similar susceptibility from standard SFT when training on our surgical rectification data. As shown in the right panel of \cref{fig:reward}, although we conduct training only on chosen data $y^+$, \textbf{the likelihood of rejected responses $y^-$ for both SFT+ and Reward-SFT inadvertently rises relative to the reference model.}
+
+This effect is termed ``pull-up''  by \citet{renlearning}: under \textit{only positive} supervision, the model indiscriminately increases the probability mass of the target distribution, reinforcing similar but unwanted responses. Since our rectification pipeline generates $y^+$ and $y^-$ sharing the vast majority of their token trajectory, maximizing the likelihood of $y^+$ inevitably boosts the probability of $y^-$. Consequently, the model fails to establish a sharp decision boundary at the critical point of divergence, underscoring the necessity of negative samples to suppress unwanted generation paths.
+
+\subsection{The Insufficiency of Relative Ranking}
+\label{sec:insufficiency}
+Given the need for negative supervision, DPO appears to be a natural candidate. DPO models preference probabilities using the Bradley-Terry model \citep{bradley1952rank}, minimizing the negative log-likelihood of the margin $M = r_\theta(x, y^+) - r_\theta(x, y^-)$:
+\begin{equation}
+P(y^+ \succ y^-) = \sigma(r_\theta(x, y^+) - r_\theta(x, y^-))
+\end{equation}
+
+However, this relative ranking formulation is unsuitable for reasoning where the answer is strictly right or wrong. In preference alignment tasks (e.g., creative writing), it suffices for a response to be \textit{better} than the alternative. Differently, in reasoning, a step is objectively \textit{correct} or \textit{incorrect}. The model is expected to maximize the probability of the correct response $y^+$ while suppressing the incorrect one $y^-$.
+
+While gradient descent naturally follows the path of least resistance, the DPO loss can be minimized by decreasing the rejected reward $r(x,y^-)$ while leaving the chosen reward $r(x,y^+)$ stagnant—or even allowing it to drop, provided $r(x,y^-)$ drops faster. \modify{This phenomenon is observed in \citet{rafailovr, pal2024smaug, renlearning}, and also corroborated by our results in \cref{fig:reward}: at later stage of DPO's training, the reward for chosen responses fails to show sustained growth, while the reward for rejected ones decreases drastically. This suggests DPO tends to optimize the margin by suppressing $y^-$ rather than reinforcing correct logic, rendering it insufficient for reasoning tasks.}
+
+% leads to a model that excessively suppresses $y^-$ without strengthening its bias toward $y^+$.
+%  This corroborates that DPO may optimize the margin by suppressing $y^-$ rather than reinforcing correct logic, rendering it insufficient for reasoning tasks.
+
+
+\subsection{Reward-based Binary Cross Entropy Optimization}
+\label{sec:method}
+
+% To address these limitations, instead of merely ranking pairs, we treat reasoning verification as a binary classification problem. By decoupling the loss for positive and loss for negative in \cref{eq:dpo_loss}, we get:
+To address these limitations, we reframe reasoning optimization as a binary classification task. Unlike DPO, which relies on the relative ranking between pairs, we decouple the supervision into independent positive and negative terms. We introduce two variants:
+
+\paragraph{SPoT-BCE}
+By decoupling the DPO objective in \cref{eq:dpo_loss}, we enforce the model to independently maximize confidence in $y^+$ and minimize confidence for $y^-$. This results in the standard Binary Cross Entropy (BCE) loss:
+\begin{equation}
+% \hspace{-5pt}
+    \mathcal{L}_{\text{SPoT-BCE}}\! =\! - \mathbb{E}_{\mathcal{D}} [ \log \sigma(r_\theta(x, y^+)) \!+\! \log \sigma(-r_\theta(x, y^-))]
+    \label{eq:bce_loss}
+\end{equation}
+The implicit reward $r_\theta(x, y)$ here serves as the classification logit. This formulation provides a dense supervision signal while effectively retaining pre-trained knowledge.
+
+\paragraph{SPoT-BCO}
+While Binary Classifier Optimization (BCO) \citep{jung2025binary} was originally designed for unpaired data (e.g., thumbs-up/down only), we identify it as uniquely suitable for our paired reasoning data. BCO introduces a reward-shift $\delta$ to the BCE loss:
+\begin{equation}
+\begin{split}
+% \hspace{-5pt}
+    \mathcal{L}_{\text{SPoT-BCO}} = - \mathbb{E}_{x, y^+, y^- \sim \mathcal{D}} \big[ \log \sigma\left(r_\theta(x, y^+)\!-\!\delta\right) + \\
+    \log \sigma\left(-\left(r_\theta(x, y^-)\!-\!\delta\right)\right)\big]
+\end{split}
+    \label{eq:bco_loss}
+\end{equation}
+where    $\delta=\frac{1}{2}\cdot\mathbb{E}_{x, y^+, y^- \sim \mathcal{D}}[r_\theta(x, y^+)+r_\theta(x, y^-)]$. In practice, $\delta$ is computed by an exponential moving average of the batch statistics.
+
+\subsection{Theoretical Analysis of $\delta$}
+The difference between SPoT-BCE and SPoT-BCO lies in the reward shift $\delta$. While \citet{jung2025binary} frame $\delta$ as providing a tighter upper bound of DPO, we analyze its specific role in reasoning alignment from a different viewpoint.
+% but empirically, $\delta$ is computed by an exponential moving average of the batch. This mechanism dynamically centers the decision boundary. We analyzes the effect caused by this adaptivity.
+
+The implicit reward $r_\theta(x,y)$ defined in \cref{eq:reward_def} is a simplified version of the theoretical optimal reward $r'(x,y)$. The exact relationship derived from the KL-constrained optimal policy $\pi^*$ is given by:
+\begin{equation}
+    r'(x,y) = \beta \log \frac{\pi^*(y|x)}{\pi_{\text{ref}}(y|x)} + \beta \log Z(x)
+    \label{eq:theoretical_reward}
+\end{equation}
+where $Z(x)$ is the partition function. While DPO eliminates $\beta \log Z(x)$ via subtraction, BCO does not yield a similar subtraction. Comparing the implicit reward in \cref{eq:bco_loss} and \cref{eq:theoretical_reward} reveals that the shift term $\delta$ serves as a functional proxy for the intractable partition term $\beta \log Z(x)$.
+
+\paragraph{Mitigating Saturation for In-Domain Reasoning}
+As training progresses, the average implicit rewards $r_\theta$ may increase (see \cref{fig:reward}). In SPoT-BCE ($\delta=0$), these elevated scores push the sigmoid input into saturation ($\sigma(\cdot) \to 1$), causing gradients to vanish. This saturation may halt optimization prematurely. By adapting $\delta$ via the exponential moving average, SPoT-BCO dynamically adjusts the threshold to enable further update for the positive term $\log \sigma\left(r_\theta(x, y^+)\!-\!\delta\right)$, resulting in higher rewards for chosen responses compared to SPoT-BCE (see \cref{fig:reward}) and consequently better performance on in-domain reasoning tasks.
+
+\paragraph{The Trade-off with OOD Generalization}
+Meanwhile, the early saturation in SPoT-BCE naturally limits the deviation of $\pi_\theta$ from $\pi_{\text{ref}}$. By relaxing this constraint, the adaptive shift in SPoT-BCO permits further optimization, leading to a larger KL divergence from the reference model. Consequently, SPoT-BCE retains prior knowledge more faithfully than SPoT-BCO.
+
+\subsection{Surgical Post-Training}
+
+\textit{Surgical Post-Training} takes its name from the synergistic design of our data pipeline and optimization objective. (1) Our data pipeline yields a dataset where $y^-$ and $y^+$ of each sample share the majority of their token trajectories, diverging only at decision-critical parts. (2) \modify{For the tokens within the shared prefix of $y^+$ and $y^-$, the gradients for the positive and negative terms counteract each other, suppressing updates on these tokens. } Consequently, parameter updates concentrate more on the \textit{divergent} tokens, acting as a form of \textit{``surgery''} for the model—precisely correcting the reasoning failure while minimizing impact on the original distribution.
+
+\input{icml2026/table/main_experiment}
+
+
+Beyond this, \methodName offers distinct advantages in:
+\begin{itemize}
+    \item \textbf{Data efficiency and knowledge injection.} While RL is limited by self-sampling and discards data beyond the model's current ability, \methodName uses an Oracle to inject new knowledge, expanding the model's capability boundary with better data utilization.
+    \item \textbf{Training efficiency.} Sampling-based RL is costly, requiring many rollouts per question. In contrast, \methodName requires only one rollout per question and typically converges within two epochs. Furthermore, SFT operates offline without frequently waiting for online sampling.
+    \item \textbf{Fine-grained supervision.} Standard RL risks unlearning correct steps by penalizing full trajectories for partial errors. \methodName provides fine-grained supervision by penalizing only the specific flawed steps.
+    \item \textbf{Pipeline simplification.} Instead of a complex multi-phase post-training pipeline (SFT $\to$ GRPO $\to$ DPO), \methodName offers the potential for a single-phase approach, which we term \textit{behavior calibration}, that optimizes reasoning and preference alignment simultaneously.
+\end{itemize}
+
+
+
+\section{Experiments}
+In this section, we present the experimental results of \methodName, followed by ablation studies that validate the effectiveness of our optimization objective (\cref{sec:exper_loss}) and our data pipeline (\cref{sec:exper_data}).
+\subsection{Setup}
+\paragraph{Models and Datasets}
+We adopt Qwen3-8B and Llama3.1-8B-Instruct as the policy models for training. We intentionally choose instruction-tuned models over base models, since these already post-trained models are more susceptible to catastrophic forgetting \citep{lu2025onpolicydistillation}. If \methodName retains these models' prior knowledge during subsequent training, it validates the robustness of our approach. For Qwen3-8B, we enforce a non-thinking mode by explicitly inserting an empty thinking block (``\verb|<think>\n\n</think>\n\n|''). We leverage Gemini 2.5 Pro as the Oracle for rectification.
+
+Experiments are conducted using the English subset of DAPO-Math-17k \cite{yu2025dapo}. Leveraging our pipeline, we generate 4k contrastive pairs for Qwen3-8B. For Llama3.1-8B-Instruct model, we randomly sample 1.5k pairs, matching the number of correct responses the model could inherently generate, to ensure a fair comparison with Rejection sampling Fine-Tuning (RFT). All methods are compared using the same amount of training data.
+
+
+\paragraph{Evaluation}
+   We evaluate performance across: \textit{in-domain reasoning}, including AIME24, AIME25, AMC23, Math500~\citep{hendrycks2measuring}, Minerva~\citep{lewkowycz2022solving}, and Olympia~\cite{he2024olympiadbench}; \textit{OOD reasoning}, including GPQA-Diamond (GPQA-D)~\citep{rein2024gpqa} and \texttt{Connect4}, and \textit{general instruction following} using IFEval~\citep{zhou2023instruction}. To strictly evaluate OOD reasoning without data contamination, we leverage GAMEBoT \cite{lin2025gamebot} to dynamically construct the \texttt{Connect4} dataset (see Appendix \ref{appd:connect4}). For reproducibility and fairness, we adopt the evaluation prompts from SoberEval \citep{hochlehnert2025soberreasoning}. We search for the optimal evaluation hyperparameters for the base models and apply them consistently across all compared methods (see Appendix \ref{appd:hyperparameter}).
+
+
+\input{icml2026/table/loss}
+
+\input{icml2026/table/ablation}
+
+\subsection{Main Results}
+We compare \methodName against three baselines: (1) \textbf{SFT:} supervised fine-tuning on rejection-sampled responses from Gemini 2.5 Pro's direct answer. (2) \textbf{RFT:} rejection sampling fine-tuning using self-generated responses. (3) \textbf{SFT+:} supervised fine-tuning on the rectified positive samples $y^+$. The main results on Qwen3-8B and Llama-3.1-8B-Instruct are summarized in Table~\ref{tab:main_results}. These results reveal the following
+key observations:
+
+\textbf{Standard SFT leads to catastrophic forgetting.}
+SFT compromises general capabilities and OOD reasoning. This degradation is even more pronounced on Llama-3.1-8B-Instruct, where IFEval accuracy drops by 11.5 points. Furthermore, the drastic distributional shift between Gemini 2.5 Pro and the policy models erodes even in-domain reasoning (e.g., Qwen3-8B drops from 46.8\% to 41.0\%). The results confirm that unconstrained likelihood maximization on off-policy data shifts the model too aggressively, damaging its prior knowledge.
+
+\textbf{Data proximity is necessary but insufficient.}
+ Despite using ``surgical'' data proximal to the policy model, SFT+ improves in-domain reasoning yet still fails to prevent forgetting in general tasks. Even with more ``on-policy'' data, RFT yields negligible in-domain improvements but incurs notable forgetting. These results indicate that data proximity alone cannot mitigate the forgetting induced by the standard SFT objective; without explicit regularization (tethering), the model's broad capabilities inevitably degrade.
+
+\textbf{\methodName achieves superior reasoning while preserving prior knowledge.}
+\methodName outperforms all baselines across in-domain and OOD metrics, attaining top performance on both Qwen3-8B and Llama-3.1-8B-Instruct. Moreover, \methodName exhibits robust generalization on OOD reasoning and IFEval, even boosting instruction following on Qwen3-8B. This demonstrates the effectiveness of both our surgical data rectification pipeline and the optimization objective.
+
+\subsection{Comparison on Loss Objectives}
+\label{sec:exper_loss}
+To validate our choice of optimization objective, we conduct experiments using Qwen3-8B to compare SPoT-BCO, SPoT-BCE against DPO, Reward-SFT   and DFT~\cite{wu2025generalization}. The results are shown in \cref{tab:loss}.
+
+We observe that both binary classification objectives (SPoT-BCO and SPoT-BCE) outperform other methods. SPoT-BCO yields the best overall average and in-domain reasoning accuracy. The adaptive boundary $\delta$ in BCO creates a tighter optimization constraint, pushing the model to clearer decision boundaries on complex math problems. SPoT-BCE serves as a strong alternative, offering superior stability for general capabilities due to strict regularization, achieving the highest scores on IFEval (85.8\%) and GPQA-D (49.5\%).
+
+In contrast, while DPO successfully mitigates catastrophic forgetting (IFEval 84.7\%), it fails to improve in-domain reasoning capabilities. This suggests that preference optimization without fine-grained supervision, is insufficient for learning correct reasoning paths. Reward-SFT endures forgetting thanks to regularization, yet its in-domain reasoning declines due to the ``pull-up'' effect. Finally, despite being designed for generalization, DFT exhibits clear degradation against raw SFT objective in our experiments.
+
+\subsection{The Effect of the Surgical Rectification Pipeline}
+\label{sec:exper_data}
+We validate the impact of \textit{data proximity} by ablating two key components: the data source and the proximity constraint $\gamma$ in \cref{sec:data}. We train Qwen3-8B using the SPoT-BCO objective across all settings, isolating the data curation strategy as the sole variable. The results are summarized in \cref{tab:ablation}.
+
+First, training on ``rectified data'' significantly outperforms ``direct data'' (+5.2\%). Notably, while the SPoT-BCO objective effectively mitigates catastrophic forgetting (only 0.4-point drop on IFEval even with out-of-distribution data), the significant gain in reasoning confirms that proximal data is inherently more effective than out-of-distribution data. Second, scaling the dataset size from 2k to 4k yields consistent improvements. Finally, when controlling for the final training set size, the subset filtered with $\gamma=0.6$ achieves the highest average score (53.2\%), surpassing the unfiltered configuration ($\gamma=1$). This further confirms that enforcing data proximity is critical for maximizing performance.
+
+\section{Related Work}
+\modify{Recent studies indicate that RL mitigates catastrophic forgetting better than SFT by leveraging on-policy data \citep{shenfeld2025rl, chen2025retaining}. Complementary to this, we highlight the critical role of KL-constrained reward formulation in DPO for preserving knowledge. However, DPO remains sub-optimal for reasoning tasks~\citep{renlearning,azar2024general}. Recent works improve DPO via synthetic data refinement \citep{pal2024smaug}, reference-free objectives~\citep{hong2024orpo,meng2024simpo}, iterative DPO \citep{chen2024self,pang2024iterative}, and step-level supervision \citep{lai2024step}. In contrast, \methodName resolves these issues by proposing a rectification pipeline to create contrasting pairs and employing a binary loss rather than rank-based objective in DPO. Furthermore, unlike on-policy distillation methods that rely on logit-level supervision \citep{agarwal2024policy, lu2025onpolicydistillation}, which is unavailable for proprietary LLMs, \methodName utilizes query-based API access without requiring teacher probabilities.}
+
+\section{Discussion and Conclusion}
+% on-policy distillation, sampling trajectories from the student model and use a high-performing teacher to grade each token of each trajectory, enable on-policy training with a dense reward signal. But it requires fully access of the teacher model, by access the weight of the model to gain whole token distribution. But current top-performing models like Gemini, GPT series, are proprietary.
+
+
+
+
+
+% On-policy distillation for small model, and how it works
+% To address the problem,
+
+% # Our method: CorrectSFT, on-policy training with minimal correction
+% # advantage: Better utilization of the data, more efficient way of sampling correct answer but trying to retain the original token distribution, only doing the correction for wrong reasnoning parts. Works by retifying only the mistakes in student's reasoning process. Higher efficiency compared to RL, while alleviate catastrophic forgetting compared to SFT.
+
+% # We do experiments on DAPO math dataset, and evaluate across various tasks, showing consistent improvements
+
+% Behavior retification, better alignment without degrading the model ability;
+
+% SPT eliminates this bottleneck by analytically constructing the correct path from the error itself.
+
+% # Related work to address them; Combine SFT and RL.
+
+
+% # But it requires the model weight from teacher model, which is often unaccessible, proprietary; such as Gemini, GPT series. We want black-box on-policy distillation.
+
+% # Our method: CorrectSFT, on-policy distillation with minimal correction
+% # advantage: Better utilization of the data, teacher generated answer, more efficient way of sampling correct answer but trying to retain the original token distribution, only doing the correction for wrong reasnoning parts. Works by retifying only the mistakes in student's reasoning process. Higher efficiency compared to RL, while less catastrophic forgetting compared to SFT.
+
+% # We do experiments on DAPO math dataset, and evaluate across various tasks, showing consistent improvements
+% limit by the Oracle Model, sft data
+% longer training, larger model
+% lifelong learning
+% Vision language model
+% simplifying the post-training pipeline
+% reduce hallucination
+
+% \section{Discussion and Conclusion}
+% \label{sec:discussion}
+We demonstrate that it is possible to efficiently boost in-domain performance via supervision without incurring catastrophic forgetting. We present \methodName, a novel paradigm synergizing the \textit{surgical rectification pipeline} with the \textit{binary optimization objective}. Our theoretical and empirical analyses reveal that this loss acts as a sample-wise early stopping mechanism that effectively preserves prior knowledge. We demonstrate that a \textit{binary} objective, as opposed to relative ranking, is critical for rigid reasoning tasks. \methodName also offers the potential to consolidates the complex post-training pipeline (SFT $\to$ GRPO $\to$ DPO) into a single phase.
+
+While \methodName reduces reliance on large-scale sampling, it currently requires an Oracle (human or advanced model) for rectification; future work could do experiments with larger models, exploring self-correction mechanisms to remove this dependency. Beyond mathematical reasoning, the principles of surgical rectification and binary verification show promise for domains such as code generation, agentic planning, and reducing hallucinations.
+\section*{Acknowledgements}
+This work is supported by Hong Kong Research Grant Council - General Research Fund (Grant No. 17211024) and HKU Seed Fund for PI Research.
+\section*{Impact Statement}
+This paper presents work whose goal is to advance the field of Machine Learning. There are many potential societal consequences of our work, none which we feel must be specifically highlighted here.
+
+\bibliography{example_paper}
+\bibliographystyle{icml2026}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\appendix
+\onecolumn
+\section{\modify{Extended Related Work}}
+
+% \paragraph{Mitigating Catastrophic Forgetting}
+% A critical challenge in post-training is the trade-off between task specialization and the preservation of general knowledge, often referred to as catastrophic forgetting. While widely attributed to parameter shifts, recent works from 2025 have provided a distributional perspective on why certain algorithms mitigate this better than others. \citet{shenfeld2025rl} introduce the principle of ``RL's Razor,'' demonstrating that on-policy reinforcement learning (RL) inherently forgets less than SFT because on-policy updates bias optimization toward KL-minimal solutions among those that solve the task. Concurrently, \citet{chen2025retaining} identify that the mode-seeking nature of RL, driven by the use of on-policy data, preserves prior knowledge significantly better than the mode-covering behavior of SFT. These findings underscore the necessity of on-policy objectives for knowledge retention. Our paradigm leverages these insights by combining a reward-based objective with minimal-edit rectification, ensuring that reasoning optimization does not come at the cost of the model's general capabilities.
+
+% \paragraph{DPO for Reasoning}
+% Direct Preference Optimization (DPO) has become a standard for alignment, yet its application to complex reasoning remains non-trivial. \citet{pal2024smaug} identify a critical failure mode in DPO (DPO-positive), where the likelihood of preferred examples can paradoxically decrease during training, and propose identifying ``unseen'' preference pairs to stabilize optimization. Furthermore, for long-chain reasoning, holistic preference optimization is often insufficient. \citet{lai2024step} introduce Step-DPO, arguing that evaluating answers holistically fails to capture the fine-grained correctness of intermediate reasoning steps. They propose step-wise preference optimization to supervise the process rather than just the outcome. While Step-DPO improves granularity, we argue that DPO-style objectives remain insufficient for \textit{rigid} reasoning tasks where the solution space is constrained. Our approach addresses this by integrating direct data rectification to correcst errors explicitly rather than relying solely on preference margins.
+
+
+\paragraph{Catastrophic Forgetting}
+
+% Recent studies suggest that SFT is prone to overfitting and suffer catastrophic forgetting while RL shows generalization ability \citep{chu2025sft,huan2025does}. To understand the underlying mechanism, \citet{mukherjee2025reinforcement} reveal that RL tends to fine-tune only sparse subnetworks of parameters, in contrast to the dense parameter updates typical of SFT. \citet{shenfeld2025rl} and \citet{chen2025retaining} identify the use of on-policy data generation as the critical factor enabling RL to retain knowledge, rather than the objective function itself. Our findings suggest this view is incomplete. We identify the implicit regularization (KL-constraint) inherent in reward-based objective function as another decisive factor that preserves prior knowledge.
+Recent work highlights a divergence between SFT and RL: while SFT is prone to overfitting and catastrophic forgetting, RL demonstrates superior generalization \citep{chu2025sft,huan2025does}. To explain this, \citet{mukherjee2025reinforcement} observed that RL updates are typically sparse, affecting only specific parameter subnetworks, whereas SFT triggers dense, global updates. Alternatively, \citet{shenfeld2025rl} and \citet{chen2025retaining} argued that on-policy data generation—rather than the optimization objective—is the primary driver of knowledge retention. However, our analysis in \cref{sec:reward} suggests that the optimization objective remains critical; specifically, the implicit regularization (KL-constraint) inherent in reward-based objectives is essential for preserving prior knowledge.
+\paragraph{DPO for Reasoning}
+DPO tends to overly penalize rejected responses rather than strengthening the chosen ones~\citep{renlearning,azar2024general,pal2024smaug}, making it sub-optimal for reasoning. To mitigate this, several variants have emerged: \citet{azar2024general} introduced IPO to regularize against overfitting; \citet{pal2024smaug} and \citet{meng2024simpo} encouraged a larger margin to incentivize learning from positive examples; and others \citep{hong2024orpo,wang2024enhancing} integrated SFT objectives to reinforce preferred responses.
+
+Furthermore, methods such as KTO \citep{ethayarajh2024kto} and BCO \citep{jung2025binary} utilize unpaired or binary feedback to reduce annotation costs. While BCO was originally designed for data efficiency, we demonstrate through theoretical and empirical analysis that its loss structure is uniquely suited to address the ranking inefficiencies of DPO while mitigating catastrophic forgetting during post-training for reasoning.
+
+Beyond general alignment, other works also leverage DPO to enhance reasoning capabilities. \citet{chen2024self} and \citet{pang2024iterative} employed iterative self-improvement, distinguishing model generations from human data. \citet{lai2024step} introduced Step-DPO including a data rectification pipeline for precise step-level feedback. \methodName distinguishes itself from Step-DPO in two critical aspects. First, while Step-DPO relies on self-correction—which is limited by the model's intrinsic capabilities—we employ an Oracle-guided correction pipeline. Second, whereas Step-DPO retains the standard DPO objective, \methodName utilizes a reward-based binary cross-entropy objective. This approach more effectively addresses the sub-optimality of DPO for reasoning while mitigating forgetting in the post-training phase.
+
+\paragraph{Online Policy Distillation}
+\methodName can be viewed as a form of online policy distillation, as it learns to recover from self-generated errors under teacher supervision. \citet{agarwal2024policy,lu2025onpolicydistillation} demonstrated that applying teacher supervision to student-generated trajectories enables rapid alignment and error correction, avoiding the inefficiency associated with full RL. However, these methods typically rely on logit-level supervision from the teacher model, which is often unavailable due to the proprietary nature of state-of-the-art LLMs. In contrast, \methodName operates on query-based API access without requiring teacher probabilities. Furthermore, \methodName utilizes a distinct regularized optimization objective for mitigating catastrophic forgetting.
+% Distilling knowledge from a model's own policy offers a data-efficient alternative to external teacher supervision. \citet{agarwal2024policy} propose on-policy distillation by learning from self-generated mistakes, utilizing a Generalized Jensen-Shannon Divergence loss to stabilize the student toward a teacher distribution. More recently,
+% Recent studies indicate that online RL mitigates catastrophic forgetting better than SFT by leveraging on-policy data \citep{shenfeld2025rl, chen2025retaining}. Complementary to this, we highlight the critical role of KL-constrained reward formulation in DPO for preserving knowledge. \citep{li2024revisiting}  Revisiting Catastrophic Forgetting in Large Language Model Tuning; \citep{chu2025sft} SFT Memorizes, RL Generalizes: A Comparative Study of Foundation Model Post-training; \citep{mukherjee2025reinforcement} Reinforcement Learning Finetunes Small Subnetworks in Large Language Models \citep{huan2025does} Does Math Reasoning Improve General LLM Capabilities? Understanding Transferability of LLM Reasoning, huang2024mitigating, Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal
+% \paragraph{DPO for Reasoning}
+% However, DPO remains sub-optimal for reasoning tasks~\citep{renlearning,azar2024general}. Recent works improve DPO via synthetic data refinement \citep{pal2024smaug}, reference-free objectives~\citep{hong2024orpo,meng2024simpo}, iterative DPO \citep{chen2024self,pang2024iterative}, and step-level supervision \citep{lai2024step}. In contrast, \methodName resolves these issues by proposing a rectification pipeline to create contrasting pairs and employing a binary loss rather than rank-based objective in DPO.
+% \paragraph{Online Policy Distillation}
+% Furthermore, unlike on-policy distillation methods that rely on white-box access \citep{agarwal2024policy, lu2025onpolicydistillation}, \methodName utilizes black-box APIs without teacher probabilities and employs a distinctly regularized optimization objective.
+\section{\modify{Breaking the Oracle's Capability Ceiling}}
+A natural concern regarding \methodName lies in its dependency on the Oracle model. Intuitively, in standard distillation paradigms, the policy model’s performance is hypothesized to be upper-bounded by the capabilities of the Oracle (teacher).
+However, when provided with the ground truth, \methodName mitigates this by redefining the Oracle’s role from open-ended problem solving to \textbf{reference-guided error correction}. By providing the Oracle with both the policy-generated error and the ground truth, the computational burden shifts from rectifying a reasoning chain from scratch to bridging the gap between the error and the correct answer. Consequently, the policy model can learn from corrected trajectories that the Oracle itself might not have been capable of generating, effectively allowing the student to surpass the teacher's generative ceiling. This also allows self-improving when setting the Oracle to be the policy model itself.
+
+\section{Hyperparameter Setting}
+\label{appd:hyperparameter}
+For data generation and evaluation, we employ a temperature of 0.7 and top-$p$ of 0.8, with a maximum token limit of 32,768. We train all models for 2 epochs with a context length of 8,192 and $\beta = 0.1$. To ensure a fair comparison, we systematically tune the hyperparameters for the baselines. Regarding learning rates, \methodName utilizes $1 \times 10^{-6}$ for Qwen3-8B and $2 \times 10^{-7}$ for Llama3.1-8B-Instruct. For SFT, RFT, and SFT+, we use learning rates of $5 \times 10^{-6}$ (Qwen3-8B) and $1 \times 10^{-6}$ (Llama3.1-8B-Instruct). The batch size is set to 32 for all the methods.
+
+
+\section{\modify{Change Ratio of Rectification}}
+We visualize the distributions of change ratio, which measures the proportion of the reasoning chain that was modified during rectification. We calculate this ratio based on the edit distance between the original and rectified responses. The results are shown in Figure~\ref{fig:sim_score}.
+\label{appd:change_ratio}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.43\linewidth]{icml2026/picture/model_distribution_comparison.pdf}
+  \caption{\textbf{Distributions of change ratio.} A higher change ratio indicates that reasoning failures occur earlier in the reasoning chain. The distribution shape is determined by the model ability and the data difficulty together.}
+  \vspace{-5pt}
+  \label{fig:sim_score}
+\end{figure}
+\section{\modify{Connect4 Task}}
+\label{appd:connect4}
+\paragraph{Game Rules}
+Connect4 is a two-player game of perfect information played on a vertical grid of dimension $6 \times 7$. Players alternate turns dropping distinct pieces into one of the seven columns, where the piece occupies the lowest available row within that column due to simulated gravity. The objective is to form a contiguous line of four pieces either vertically, horizontally, or diagonally. It requires the LLM to \textit{parse the board state}, \textit{execute lookahead planning}, and \textit{identify winning topologies}. With a state-space complexity of approximately $4.5 \times 10^{12}$ legal positions, Connect4 offers a non-trivial, deterministic environment ideal for generating synthetic states to evaluate LLMs without data contamination.
+\paragraph{Dynamic Dataset Construction}
+To strictly evaluate OOD reasoning without the risk of data contamination in static benchmarks, we leverage the GAMEBoT framework \cite{lin2025gamebot}. While GAMEBoT supports full-game simulations, interactive evaluation is often inefficient and difficult to reproduce. Instead, we dynamically construct a static dataset of reasoning tasks rooted in \texttt{Connect4}. To ensure the model relies on symbolic reasoning, the board state is serialized into a text-based format (e.g., a list of coordinates).
+
+The construction process involves:
+\begin{itemize}
+
+\item State Generation: We utilize two randomized agents to simulate gameplay, generating a diverse distribution of board states ranging from balanced positions to critical tactical scenarios.
+\item Filtering and Balancing: We filter out duplicate states. Furthermore, to prevent LLMs from inflating scores by consistently predicting ``no winning moves'' (due to label imbalance), we downsample states with empty answers, maintaining them at a maximum ratio of 20\% of the dataset.
+\item Dataset Compilation: For efficient evaluation, we construct a final dataset comprising 500 distinct instances.
+\end{itemize}
+\paragraph{Evaluation Protocol}
+For each instance, LLMs are prompted to solve two problems in a query:
+\begin{itemize}
+    \item \textit{Are there any potential winning moves to form 4-in-a-row for you? Output all winning moves.}
+    \item \textit{Are there any potential winning moves to form 4-in-a-row for your opponent? Output all winning moves.}
+\end{itemize}
+Ground truth is computed using a perfect solver within GAMEBoT. We parse the model's Chain-of-Thought (CoT) to extract the final answers and verify them against the game engine's ground truth.
+
+
+
+
+\section{Rectification Prompt}
+\label{appd:prompt}
+\begin{tcolorbox}[colback=green!3, title=Rectification Prompt Without Ground Truth, enhanced, sharp corners, fonttitle=\small]
+\begin{Verbatim}[breaklines=true, formatcom=\relax, breakanywhere=true, breaksymbolleft=, breaksymbolright=,fontsize=\scriptsize]
+Act as a helpful teaching assistant. Your goal is to revise a student model's answer to make it correct, while maintaining the student model's original writing style, tone, and formatting. The final result should look as if the student model had solved the problem correctly on its first try.
+
+You should first solve the problem independently and do the following:
+1. Identify the correct parts of the student model's answer and keep them.
+2. Replace the incorrect parts with correct reasoning.
+3. Carefully match the student model's original writing style, including their tone, vocabulary, formatting and sentence structure.
+
+**IMPORTANT OUTPUT FORMAT:**
+1. First output ``=== CORRECTED STARTED ==='' followed by the corrected answer
+2. Ends with the corrected answer in the format: 'Therefore, the final answer is: $\\boxed{{ANSWER}}$.'
+3. Then output ``=== CORRECTED ENDED ==='' at the end of the corrected trace
+4. Do not output meta-phrases like "Here is the corrected version"
+\end{Verbatim}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=green!3, title=Rectification Prompt With Ground Truth, enhanced, sharp corners, fonttitle=\small]
+\begin{Verbatim}[breaklines=true, formatcom=\relax, breakanywhere=true, breaksymbolleft=, breaksymbolright=,fontsize=\scriptsize]
+Act as a helpful teaching assistant. Your goal is to revise a student model's answer to make it correct, while maintaining the student model's original writing style, tone, and formatting. The final result should look as if the student model had solved the problem correctly on its first try.
+
+You should compare the student model's answer with the Reference Ground Truth and do the following:
+1. Identify the correct parts of the student model's answer and keep them.
+2. Replace the incorrect parts with correct reasoning.
+3. Carefully match the student model's original writing style, including their tone, vocabulary, and sentence structure.
+
+**IMPORTANT OUTPUT FORMAT:**
+1. First output ``=== CORRECTED STARTED ==='' followed by the corrected answer
+2. Ends with the corrected answer in the format: 'Therefore, the final answer is: $\\boxed{{ANSWER}}$.'
+3. Then output ``=== CORRECTED ENDED ==='' at the end of the corrected trace
+4. Do not output meta-phrases like "Here is the corrected version"
+\end{Verbatim}
+\end{tcolorbox}
+
+% \section{Evaluation Prompts}
+
+\section{\modify{Rectification Samples}}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{icml2026/picture/Picture5.pdf}
+\caption{\textbf{Random Rectification Example 1.} Left: answer from Qwen3-8B; Right: rectification by Gemini 2.5 Pro.}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{icml2026/picture/Picture2.pdf}
+\caption{\textbf{Random Rectification Example 2.} Left: answer from Qwen3-8B; Right: rectification by Gemini 2.5 Pro.}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{icml2026/picture/Picture3.pdf}
+\caption{\textbf{Random Rectification Example 3.} Left: answer from Qwen3-8B; Right: rectification by Gemini 2.5 Pro.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1\linewidth]{icml2026/picture/Picture1.pdf}
+\caption{\textbf{Random Rectification Example 4.} Left: answer from Qwen3-8B; Right: rectification by Gemini 2.5 Pro.}
+\end{figure}
+
+% \section{You \emph{can} have an appendix here.}
+
+% You can have as much text here as you want. The main body must be at most $8$
+% pages long. For the final version, one more page can be added. If you want, you
+% can use an appendix like this one.
+
+% The $\mathtt{\backslash onecolumn}$ command above can be kept in place if you
+% prefer a one-column appendix, or can be removed if you prefer a two-column
+% appendix.  Apart from this possible change, the style (font size, spacing,
+% margins, page numbering, etc.) should be kept the same as the main body.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was created
+% by Iain Murray in 2018, and modified by Alexandre Bouchard in
+% 2019 and 2021 and by Csaba Szepesvari, Gang Niu and Sivan Sabato in 2022.
+% Modified again in 2023 and 2024 by Sivan Sabato and Jonathan Scarlett.
+% Previous contributors include Dan Roy, Lise Getoor and Tobias
+% Scheffer, which was slightly modified from the 2010 version by
+% Thorsten Joachims & Johannes Fuernkranz, slightly modified from the
+% 2009 version by Kiri Wagstaff and Sam Roweis's 2008 version, which is
+% slightly modified from Prasad Tadepalli's 2007 version which is a
+% lightly changed version of the previous year's version by Andrew
+% Moore, which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.
