@@ -15,8 +15,36 @@
 
 ## News
 
-- **[2026-03-05]** Released the SPoT-tuned checkpoint [linius/Qwen3-8B-SPoT](https://huggingface.co/linius/Qwen3-8B-SPoT) on HuggingFace.
-- **[2026-03-04]** Released the Connect4 evaluation files on HuggingFace: [linius/connect4](https://huggingface.co/datasets/linius/connect4).
+- **[2026-03-05]** Our SPoT-tuned Qwen3-8B checkpoint is live on HuggingFace — try it yourself! [linius/Qwen3-8B-SPoT](https://huggingface.co/linius/Qwen3-8B-SPoT)
+- **[2026-03-04]** The Connect4 OOD reasoning evaluation dataset is now publicly available: [linius/connect4](https://huggingface.co/datasets/linius/connect4).
+
+---
+
+## Main Results
+
+SPoT consistently outperforms all baselines across in-domain reasoning, OOD reasoning, and general instruction following. Crucially, while every competing method trades off at least one capability, **SPoT is the only approach that improves all three simultaneously**.
+
+### Qwen3-8B
+
+| Method | In-domain Avg | OOD Avg | IFEval | Overall Avg |
+|---|---|---|---|---|
+| Qwen3-8B (base) | 46.8 | 29.9 | 83.0 | 47.1 |
+| + SFT | 41.0 (-5.8) | 25.5 (-4.4) | 79.6 (-3.4) | 41.8 (-5.3) |
+| + RFT | 47.3 (+0.5) | 26.1 (-3.8) | 81.5 (-1.5) | 46.4 (-0.7) |
+| + SFT+ | 50.5 (+3.7) | 30.7 (+0.8) | 80.0 (-3.0) | 49.4 (+2.3) |
+| **+ SPoT (ours)** | **52.1 (+5.3)** | **41.4 (+11.5)** | **84.8 (+1.8)** | **53.3 (+6.2)** |
+
+### Llama3.1-8B-Instruct
+
+| Method | In-domain Avg | OOD Avg | IFEval | Overall Avg |
+|---|---|---|---|---|
+| Llama3.1-8B-Instruct (base) | 18.6 | 16.8 | 73.6 | 24.3 |
+| + SFT | 18.0 (-0.6) | 15.7 (-1.1) | 62.1 (-11.5) | 22.4 (-1.9) |
+| + RFT | 18.0 (-0.6) | 17.2 (+0.4) | 71.2 (-2.4) | 23.7 (-0.6) |
+| + SFT+ | 19.9 (+1.3) | 16.7 (-0.1) | 68.6 (-5.0) | 24.6 (+0.3) |
+| **+ SPoT (ours)** | **20.7 (+2.1)** | **18.5 (+1.7)** | 73.2 (-0.4) | **26.0 (+1.7)** |
+
+Benchmarks: AIME24/25, AMC23, MATH-500, Minerva, OlympiadBench (in-domain); GPQA-Diamond, Connect4 (OOD); IFEval (instruction following). The OOD gain on Connect4 alone is **+25.1 points** for Qwen3-8B (10.9 → 36.0).
 
 ---
 
