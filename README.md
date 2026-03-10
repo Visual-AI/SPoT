@@ -11,14 +11,12 @@
 
 </div>
 
----
 
 ## News
 
 - **[2026-03-05]** Our SPoT-tuned Qwen3-8B checkpoint is live on HuggingFace — try it yourself! [linius/Qwen3-8B-SPoT](https://huggingface.co/linius/Qwen3-8B-SPoT)
 - **[2026-03-04]** The Connect4 OOD reasoning evaluation dataset is now publicly available: [linius/connect4](https://huggingface.co/datasets/linius/connect4).
 
----
 
 ## Main Results
 
@@ -46,7 +44,6 @@ SPoT consistently outperforms all baselines across in-domain reasoning, OOD reas
 
 Benchmarks: AIME24/25, AMC23, MATH-500, Minerva, OlympiadBench (in-domain); GPQA-Diamond, Connect4 (OOD); IFEval (instruction following). The OOD gain on Connect4 alone is **+25.1 points** for Qwen3-8B (10.9 → 36.0).
 
----
 
 ## Data Pipeline
 
@@ -92,7 +89,7 @@ python scripts/correct_errors_parallel.py \
     --workers 200
 ```
 
----
+
 
 ## Evaluation
 
@@ -124,7 +121,6 @@ bash run_evaluation_multi_trial_duplicated_data.sh /path/to/model --disable-thin
 
 Results are saved to `evaluation_results/aggregated_results.json`.
 
----
 
 ## Citation
 
