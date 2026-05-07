@@ -90,6 +90,61 @@ python scripts/correct_errors_parallel.py \
 ```
 
 
+## 🏋️ Training
+
+SPoT uses a binary preference objective (BCO) over the contrastive pairs `(x, y⁻, y⁺)` produced by the data pipeline. Training is full finetune (no LoRA) on Qwen3-8B with DeepSpeed ZeRO-2.
+
+### Install
+
+```bash
+pip install transformers==4.53.3 trl==0.20.0 accelerate==1.10.0 \
+            torch==2.7.0 deepspeed flash-attn wandb
+```
+
+### Run
+
+```bash
+bash train/dpo_sft_qwen3_accelerate.sh <output_ckpt> <data.jsonl> [base_model]
+```
+
+Example:
+
+```bash
+bash train/dpo_sft_qwen3_accelerate.sh \
+    ckpts/qwen3_spot \
+    data/gemini_corrected.jsonl \
+    Qwen/Qwen3-8B
+```
+
+The launcher autodetects GPU count via `nvidia-smi -L` and dispatches with `accelerate launch` using `train/accelerate_config.yaml` (DeepSpeed ZeRO-2, bf16). After training, the saved checkpoint is re-serialized in bf16 to halve disk usage.
+
+### Data format
+
+Each line of the input JSONL must contain:
+
+| Key | Role |
+|---|---|
+| `question` (or `prompt`) | User query |
+| `gemini_corrected_answer` | Chosen response `y⁺` (Oracle correction) |
+| `original_answer` | Rejected response `y⁻` (model's wrong output) |
+
+### Default hyperparameters
+
+| | |
+|---|---|
+| Loss | `bco_pair`, β=0.1 |
+| Learning rate | 1e-6, cosine schedule, warmup 0.05 |
+| Epochs | 2 |
+| Batch | 2 per GPU × 2 grad accum |
+| Max sequence length | 8192 |
+| Precision | bf16, FlashAttention-2, gradient checkpointing |
+
+Override any of the above by editing `train/dpo_sft_qwen3_accelerate.sh`.
+
+### WandB
+
+Logging defaults to project `dpo-sft-qwen3` with no entity. Set `WANDB_ENTITY=<your-team>` before launching, or pass `--report_to none` to disable.
+
 
 ## 🧪 Evaluation
 

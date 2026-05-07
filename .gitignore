@@ -213,3 +213,6 @@ config.ini
 
 # Custom project-specific patterns
 # Add your own patterns below
+
+# Allow tracked training configs
+!train/ds_config_zero2.json
