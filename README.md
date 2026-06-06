@@ -1,19 +1,20 @@
 <div align="center">
 
-# Surgical Post-Training: Cutting Errors, Keeping Knowledge
+# Surgical Post-Training: Proximal On-Policy Distillation for Reasoning with Knowledge Retention
 
 
 [![arXiv](https://img.shields.io/badge/arXiv-2603.01683-b31b1b.svg)](https://arxiv.org/abs/2603.01683)
 [![Model](https://img.shields.io/badge/🤗%20Model-Qwen3--8B--SPoT-blue)](https://huggingface.co/linius/Qwen3-8B-SPoT)
 [![Dataset](https://img.shields.io/badge/🤗%20Dataset-connect4-blue)](https://huggingface.co/datasets/linius/connect4)
 
-*SPoT successfully introduces new knowledge via an Oracle to boost LLM reasoning, while preventing catastrophic forgetting through a reward-based binary optimization objective. This work makes a deep investigation into the limitations of SFT and DPO.*
+*SPoT is a proximal on-policy distillation framework that uses a black-box Oracle to minimally correct student failures, improving reasoning while preserving prior knowledge through a reward-based binary optimization objective.*
 
 </div>
 
 
 ## 📰 News
 
+- **[2026-05-15]** Paper updated to v2 with the proximal on-policy distillation framing and knowledge-retention analysis.
 - **[2026-03-05]** Our SPoT-tuned Qwen3-8B checkpoint is live on HuggingFace — try it yourself! [linius/Qwen3-8B-SPoT](https://huggingface.co/linius/Qwen3-8B-SPoT)
 - **[2026-03-04]** The Connect4 OOD reasoning evaluation dataset is now publicly available: [linius/connect4](https://huggingface.co/datasets/linius/connect4).
 
@@ -47,7 +48,7 @@ Benchmarks: AIME24/25, AMC23, MATH-500, Minerva, OlympiadBench (in-domain); GPQA
 
 ## 🔧 Data Pipeline
 
-The pipeline generates contrastive pairs `(x, y⁻, y⁺)` where `y⁺` is a minimally-edited correction of the model's wrong response `y⁻`.
+The pipeline generates proximal on-policy contrastive pairs `(x, y⁻, y⁺)` where `y⁺` is a minimally-edited correction of the model's wrong response `y⁻`.
 
 ```
 Raw Dataset  →  Error Elicitation  →  Oracle Rectification  →  Contrastive Pairs
@@ -79,7 +80,7 @@ Outputs `errors.jsonl` (incorrect predictions) and `all_results.jsonl`.
 
 ### Step 2: Oracle Rectification
 
-Use Gemini 2.5 Pro to surgically correct the errors (supports resuming):
+Use a black-box Oracle such as Gemini 2.5 Pro to surgically correct the errors (supports resuming):
 
 ```bash
 # Correction mode: correct student errors while preserving style
@@ -92,7 +93,7 @@ python scripts/correct_errors_parallel.py \
 
 ## 🏋️ Training
 
-SPoT uses a binary preference objective (BCO) over the contrastive pairs `(x, y⁻, y⁺)` produced by the data pipeline. Training is full finetune (no LoRA) on Qwen3-8B with DeepSpeed ZeRO-2.
+SPoT uses a reward-based binary cross-entropy objective (implemented as `bco_pair`) over the proximal contrastive pairs `(x, y⁻, y⁺)` produced by the data pipeline. Training is full finetune (no LoRA) on Qwen3-8B with DeepSpeed ZeRO-2.
 
 ### Install
 
@@ -183,7 +184,7 @@ If you find this work useful, please cite:
 
 ```bibtex
 @article{lin2026surgical,
-      title={Surgical Post-Training: Cutting Errors, Keeping Knowledge},
+      title={Surgical Post-Training: Proximal On-Policy Distillation for Reasoning with Knowledge Retention},
       author={Wenye Lin and Kai Han},
       year={2026},
       journal={arXiv preprint arXiv:2603.01683}
