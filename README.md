@@ -5,6 +5,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2603.01683-b31b1b.svg)](https://arxiv.org/abs/2603.01683)
 [![Model](https://img.shields.io/badge/🤗%20Model-Qwen3--8B--SPoT-blue)](https://huggingface.co/linius/Qwen3-8B-SPoT)
+[![Model](https://img.shields.io/badge/🤗%20Model-Llama--3.1--8B--Instruct--SPoT-blue)](https://huggingface.co/linius/Llama3.1-8B-SPoT)
 [![Dataset](https://img.shields.io/badge/🤗%20Dataset-connect4-blue)](https://huggingface.co/datasets/linius/connect4)
 
 *SPoT is a proximal on-policy distillation framework that uses a black-box Oracle to minimally correct student failures, improving reasoning while preserving prior knowledge through a reward-based binary optimization objective.*
@@ -14,6 +15,7 @@
 
 ## 📰 News
 
+- **[2026-06-17]** Our SPoT-tuned Llama-3.1-8B-Instruct checkpoint is live on Hugging Face: [linius/Llama3.1-8B-SPoT](https://huggingface.co/linius/Llama3.1-8B-SPoT).
 - **[2026-05-15]** Paper updated to v2 with the proximal on-policy distillation framing and knowledge-retention analysis.
 - **[2026-03-05]** Our SPoT-tuned Qwen3-8B checkpoint is live on HuggingFace — try it yourself! [linius/Qwen3-8B-SPoT](https://huggingface.co/linius/Qwen3-8B-SPoT)
 - **[2026-03-04]** The Connect4 OOD reasoning evaluation dataset is now publicly available: [linius/connect4](https://huggingface.co/datasets/linius/connect4).
@@ -33,11 +35,11 @@ SPoT consistently outperforms all baselines across in-domain reasoning, OOD reas
 | + SFT+ | 50.5 (+3.7) | 30.7 (+0.8) | 80.0 (-3.0) | 49.4 (+2.3) |
 | **+ SPoT (ours)** | **52.1 (+5.3)** | **41.4 (+11.5)** | **84.8 (+1.8)** | **53.3 (+6.2)** |
 
-### Llama3.1-8B-Instruct
+### Llama-3.1-8B-Instruct
 
 | Method | In-domain Avg | OOD Avg | IFEval | Overall Avg |
 |---|---|---|---|---|
-| Llama3.1-8B-Instruct (base) | 18.6 | 16.8 | 73.6 | 24.3 |
+| Llama-3.1-8B-Instruct (base) | 18.6 | 16.8 | 73.6 | 24.3 |
 | + SFT | 18.0 (-0.6) | 15.7 (-1.1) | 62.1 (-11.5) | 22.4 (-1.9) |
 | + RFT | 18.0 (-0.6) | 17.2 (+0.4) | 71.2 (-2.4) | 23.7 (-0.6) |
 | + SFT+ | 19.9 (+1.3) | 16.7 (-0.1) | 68.6 (-5.0) | 24.6 (+0.3) |
